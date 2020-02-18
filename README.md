@@ -1,6 +1,7 @@
 # raulrojas1.github.io
 Ejemplo de un github page
- cuando no funcione el css  
+ cuando no funcione el css  https://github.community/t5/GitHub-Pages/CSS-not-being-applied-in-pages/m-p/44786#M2529 <br/> <br/>
+  <br/> <br/>
  head
         meta charset="UTF-8"
         meta name="viewport" content="width=device-width, initial-scale=1.0"
