@@ -1,0 +1,45 @@
+
+
+body {
+    background: #e5e5e5;
+    padding: 0px;
+}
+
+header {
+    margin-top:8px;
+    padding-top:8px;
+    background: #e5e5e5;
+    width: 100%;
+    -webkit-box-shadow: 0 0 9px .5px #23374d;
+    box-shadow: 0 0 9px .5px #23374d;
+}
+
+#logo {
+    display: block;
+    margin: auto;
+    width: 300px;
+    
+}
+
+#menu {
+    display: block;
+    margin-top: 8px;
+    background: #1089ff;
+    padding: 0px;
+}
+
+    #menu li {
+        list-style: none;
+        display: inline-block;
+        margin-right: 10px;
+        padding: 10px 0px;
+        text-shadow: 0 0 1px #000000;
+        border-bottom: 2px solid #23374d;
+        border-top: 2px solid #23374d;
+    }
+        #menu li a {
+            color: #23374d;
+            font: bold 30px Ginebra;
+            text-decoration: none;
+            text-align: center;
+        }
