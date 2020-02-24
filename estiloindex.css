@@ -8,6 +8,7 @@ body {
 header {
     margin-top:8px;
     padding-top:8px;
+    width: 100%;
     background: #e5e5e5;
     -webkit-box-shadow: 0 0 9px .5px #23374d;
     box-shadow: 0 0 9px .5px #23374d;
@@ -16,8 +17,8 @@ header {
 #logo {
     display: block;
     margin: auto;
-    width: 40%;
-    
+    max-width: 40%;
+    min-width: 300px;
 }
 
 
