@@ -52,3 +52,19 @@ header {
                 box-shadow: 0 0 4px 2px #FFFFFF;
                 transition: 0.7s;
             }
+
+
+@font-face {
+    font-family: "tomoon";
+    src: url(fuente/TalkingToTheMoon.ttf);
+}
+
+#frase{
+    font-family: tomoon;
+    text-align:center;
+}
+    #frase h1 {
+        font-size: 270%;
+        color: #454545;
+        text-shadow: 0 0 1px #000000;
+    }
