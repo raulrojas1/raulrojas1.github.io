@@ -9,7 +9,6 @@ header {
     margin-top:8px;
     padding-top:8px;
     background: #e5e5e5;
-    width: 100%;
     -webkit-box-shadow: 0 0 9px .5px #23374d;
     box-shadow: 0 0 9px .5px #23374d;
 }
@@ -17,7 +16,7 @@ header {
 #logo {
     display: block;
     margin: auto;
-    width: 300px;
+    width: 40%;
     
 }
 
