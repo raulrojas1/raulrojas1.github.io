@@ -21,25 +21,34 @@ header {
     
 }
 
+
+
+
+
+
 #menu {
-    display: block;
-    margin-top: 8px;
+    text-align: center;
+    padding: 2px 0px;
+    margin: 10px 0px;
     background: #1089ff;
-    padding: 0px;
+    -webkit-box-shadow: 0 0 9px .5px #23374d;
+    box-shadow: 0 0 9px .5px #23374d;
 }
 
     #menu li {
         list-style: none;
         display: inline-block;
-        margin-right: 10px;
-        padding: 10px 0px;
         text-shadow: 0 0 1px #000000;
-        border-bottom: 2px solid #23374d;
-        border-top: 2px solid #23374d;
     }
-        #menu li a {
+        #menu a {
             color: #23374d;
-            font: bold 30px Ginebra;
+            font: bold 25px Ginebra;
             text-decoration: none;
-            text-align: center;
+            padding: 4px;
         }
+            #menu a:hover {
+                background: #e5e5e5;
+                -webkit-box-shadow: 0 0 4px 2px #FFFFFF;
+                box-shadow: 0 0 4px 2px #FFFFFF;
+                transition: 0.7s;
+            }
