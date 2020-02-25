@@ -27,7 +27,7 @@ header {
 
 
 #menu {
-    text-align: center;
+    text-align: center;    
     padding: 2px 0px;
     margin: 10px 0px;
     background: #1089ff;
@@ -51,6 +51,7 @@ header {
                 background: #e5e5e5;
                 -webkit-box-shadow: 0 0 4px 2px #FFFFFF;
                 box-shadow: 0 0 4px 2px #FFFFFF;
+                font-size: 5ex;
                 transition: 0.2s;
             }
 
