@@ -15,13 +15,13 @@ let avisodistancia = distance =>{
         return "Encontrado en ";
     }
     else if(distance<10){
-        return "Boiling Hot!";
+        return "Te pasaste!";
     }
     else if (distance<30 ) {
-        return "Really Hot";
+        return "Casi uiuiui";
     }
     else if (distance<150) {
-        return "Hot";
+        return "Caliente";
     }
     else if (distance<180 ) {
         return "Frío";
