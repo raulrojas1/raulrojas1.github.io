@@ -1,0 +1,31 @@
+body {
+    background: rgb(204, 231, 232);
+    display: flex;
+    padding: 0;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+#fondo{
+	-webkit-box-shadow: 0 0 10px 0 rgba(0,0,0,1);
+	box-shadow: 0 0 10px 0 rgba(0,0,0,1);
+
+}
+
+#aviso{
+    font-size: 20px;
+    padding: 0;
+    margin: 5px;
+}
+
+#reiniciar{
+    font-size: 30px;
+    border: none;
+    margin: 0;
+    padding: 0;
+    background: white;
+    color: black;
+    -webkit-box-shadow: 0 0 10px 0 rgb(255, 255, 255);
+	box-shadow: 0 0 10px 0 rgb(255, 255, 255) 152);
+}
