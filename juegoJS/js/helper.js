@@ -1,5 +1,6 @@
 let aleatnum = tamano=>{
-    
+
+
     return Math.floor(Math.random()*tamano);
 }
 
@@ -27,6 +28,6 @@ let avisodistancia = distance =>{
         return "Frío";
     }
     else {
-        return "Muy Frío"
+        return "Muy Frío";
     }
 }
