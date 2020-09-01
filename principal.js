@@ -101,6 +101,8 @@ function create(){
 }
 
 function choca(){
+	alert("bueno, se intentó");
+	location.reload();
 
 }
 
