@@ -22,7 +22,26 @@ header {
 }
 
 
+.container{
+    display: grid;
+    grid-template-columns: 50% 50%;
+}
 
+.box{
+    background: #eeeeee;
+    text-align: center;
+    color: #23374d;
+    -webkit-box-shadow: 0 0 9px .5px #eeeeee;
+    box-shadow: 0 0 9px .5px #eeeeee;
+    padding: 1em;
+}
+
+
+
+.titulo{
+
+
+}
 
 
 
