@@ -1,4 +1,4 @@
-var url ='http://proyecto-laravel.com.devel';
+var url ='https://raulrojas1.github.io';
 
 window.addEventListener("load",function() {
 	$('.btn-like').css('cursor','pointer');
