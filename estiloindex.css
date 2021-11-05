@@ -6,12 +6,10 @@ body {
 }
 
 header {
-    margin-top:8px;
+    margin-top:6em;
     padding-top:8px;
     width: 100%;
     background: #e5e5e5;
-    -webkit-box-shadow: 0 0 9px .5px #23374d;
-    box-shadow: 0 0 9px .5px #23374d;
 }
 
 #logo {
@@ -47,8 +45,8 @@ header {
 
 #menu {
     text-align: center;    
-    padding: 2px 0px;
-    margin: 10px 0px;
+    padding: 2px 3px;
+    margin: 4em 0px;
     background: #1089ff;
     -webkit-box-shadow: 0 0 9px .5px #23374d;
     box-shadow: 0 0 9px .5px #23374d;
