@@ -1,14 +1,4 @@
-<script src="https://code.jquery.com/jquery-1.8.3.min.js"></script>
-<script type="text/javascript">
-        $('#option_selector').change(refresh_inputs);
-        refresh_inputs();
-        function refresh_inputs() {
-            var name = $('#option_selector').attr('name');
-            var val = $('#option_selector').val();
-            $('#'+name+' div').hide();
-            $('#'+val).show();
-        }
-</script>
+
 
 <select id="option_selector" name="options">
     <option value="option1">Option 1</option>
@@ -26,3 +16,15 @@
         <input type="text" name="input6" value="Input 6" />
     </div>
 </div>
+
+<script src="https://code.jquery.com/jquery-1.8.3.min.js"></script>
+<script type="text/javascript">
+        $('#option_selector').change(refresh_inputs);
+        refresh_inputs();
+        function refresh_inputs() {
+            var name = $('#option_selector').attr('name');
+            var val = $('#option_selector').val();
+            $('#'+name+' div').hide();
+            $('#'+val).show();
+        }
+</script>
