@@ -127,8 +127,8 @@ function createBoard(){
 }
 
 function confetti({
-  particleCount: 300,
-  spread: 500,
+  particleCount: 100,
+  spread: 70,
   origin: { y: 0.6 }
 });
 	 
