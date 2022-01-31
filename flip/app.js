@@ -1,5 +1,4 @@
- import canvasConfetti from 'https://cdn.skypack.dev/canvas-confetti';
-document.addEventListener('DOMContentLoaded',() =>{
+ document.addEventListener('DOMContentLoaded',() =>{
 
 //car options
 // chaged to var instead of const to be able of randomize 
