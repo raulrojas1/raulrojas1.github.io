@@ -119,7 +119,9 @@ function createBoard(){
 		card.setAttribute('src','images/blank.png')
 		card.setAttribute('data-id',i)
 		card.style.userSelect = "none"
-		card.addEventListener('click',flipCard)
+		if (cardsChosen.length <= 2 ) {
+			card.addEventListener('click',flipCard)
+		}
 		grid.append(card)
 	}
 }
@@ -130,7 +132,7 @@ function checkForMatch(){
 	const optionOneId = cardsChosenId[0]
 	const optionTwoId = cardsChosenId[1]
 
-	if (cardsChosen[0] === cardsChosen[1]) {
+	if (cardsChosen[0] === cardsChosen[1] /*& optionOneId != optionTwoId*/) {
 		
 		//cards[optionOneId].setAttribute('src','images/white.png')
 		cards[optionOneId].style.opacity = '0'
@@ -162,12 +164,21 @@ function checkForMatch(){
 
 //create flip
 function flipCard(){
-        var cardId = this.getAttribute('data-id')
-        cardsChosen.push(cardArray[cardId].name)
-        cardsChosenId.push(cardId)
-        this.setAttribute('src', cardArray[cardId].img)
-        if (cardsChosen.length === 2) {
-            setTimeout(checkForMatch, 200)
+	    if (cardsChosen.length <= 1) {
+	        var cardId = this.getAttribute('data-id')
+	        cardsChosen.push(cardArray[cardId].name)
+	        cardsChosenId.push(cardId)
+	        this.setAttribute('src', cardArray[cardId].img)
+	    }
+
+        if (cardsChosen.length === 2 ) {
+        	if (cardsChosenId[0] != cardsChosenId[1]) {
+        		setTimeout(checkForMatch, 300)
+        	}
+        	else {
+        		cardsChosen.pop()
+        		cardsChosenId.pop()
+        	}
         }
     }
 
