@@ -126,6 +126,12 @@ function createBoard(){
 	}
 }
 
+confetti({
+  particleCount: 100,
+  spread: 70,
+  origin: { y: 0.6 }
+});
+	 
 //check for matches
 function checkForMatch(){
 	var cards = document.querySelectorAll('img')
