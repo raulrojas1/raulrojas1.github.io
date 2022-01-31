@@ -1,3 +1,4 @@
+ import canvasConfetti from 'https://cdn.skypack.dev/canvas-confetti';
 document.addEventListener('DOMContentLoaded',() =>{
 
 //car options
@@ -147,7 +148,7 @@ function checkForMatch(){
 		cards[optionOneId].style.userSelect = "none"
 
 		cardsWon.push(cardsChosen)
-
+		confetti()
 	}else {
 		cards[optionOneId].setAttribute('src','images/blank.png')
 		cards[optionTwoId].setAttribute('src','images/blank.png')
