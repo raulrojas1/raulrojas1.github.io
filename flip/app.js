@@ -1,5 +1,9 @@
  document.addEventListener('DOMContentLoaded',() =>{
 
+// add your code here!
+// see https://www.skypack.dev/view/confetti for README
+
+
 //car options
 // chaged to var instead of const to be able of randomize 
 const cardArray = [
@@ -126,12 +130,8 @@ function createBoard(){
 	}
 }
 
-function confetti({
-  particleCount: 100,
-  spread: 70,
-  origin: { y: 0.6 }
-});
-	 
+
+ 
 //check for matches
 function checkForMatch(){
 	var cards = document.querySelectorAll('img')
@@ -153,7 +153,16 @@ function checkForMatch(){
 		cards[optionOneId].style.userSelect = "none"
 
 		cardsWon.push(cardsChosen)
-		confetti()
+		confetti({
+		  particleCount: 1000,
+		  startVelocity: 30,
+		  spread: 360,
+		  origin: {
+		    x: Math.random(),
+		    // since they fall down, start a bit higher than random
+		    y: Math.random() - 0.2
+		  }
+		});
 	}else {
 		cards[optionOneId].setAttribute('src','images/blank.png')
 		cards[optionTwoId].setAttribute('src','images/blank.png')
