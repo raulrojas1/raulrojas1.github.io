@@ -131,7 +131,7 @@ let MultiplayerRingPage = class MultiplayerRingPage {
         this.delay = (ms) => new Promise((res) => setTimeout(res, ms));
     }
     ngOnInit() {
-        this.socket = (0,socket_io_client__WEBPACK_IMPORTED_MODULE_4__["default"])('http://54.82.28.190:4000');
+        this.socket = (0,socket_io_client__WEBPACK_IMPORTED_MODULE_4__["default"])('https://pokemonsocket.onrender.com');
         this.socket.on('enemySelects', type => {
             this.iniciarCiclo(type);
         });

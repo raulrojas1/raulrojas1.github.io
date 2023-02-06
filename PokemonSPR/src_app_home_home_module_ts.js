@@ -130,7 +130,7 @@ module.exports = "#container {\n  text-align: center;\n  position: absolute;\n  
   \************************************************/
 /***/ ((module) => {
 
-module.exports = "<ion-header [translucent]=\"true\">\n  <ion-toolbar>\n    <ion-title>\n      Inicio\n    </ion-title>\n  </ion-toolbar>\n</ion-header>\n\n<ion-content [fullscreen]=\"true\">\n  <ion-header collapse=\"condense\">\n    <ion-toolbar>\n      <ion-title size=\"large\">Blank</ion-title>\n    </ion-toolbar>\n  </ion-header>\n\n  <div id=\"container\">\n    <strong>Ir a<br><br><br>\n      <ion-button [routerLink]=\"['/batalla']\" color=\"success\" fill=\"outline\">batalla?</ion-button>\n      &nbsp;\n      <ion-button [routerLink]=\"['/multijugador']\" color=\"tertiary\" fill=\"outline\">Vs. mode</ion-button>\n    </strong>\n  </div>\n</ion-content>\n";
+module.exports = "<ion-header [translucent]=\"true\">\n  <ion-toolbar>\n    <ion-title>\n      Inicio\n    </ion-title>\n  </ion-toolbar>\n</ion-header>\n\n<ion-content [fullscreen]=\"true\">\n  <ion-header collapse=\"condense\">\n    <ion-toolbar>\n      <ion-title size=\"large\">Blank</ion-title>\n    </ion-toolbar>\n  </ion-header>\n\n  <div id=\"container\">\n    <strong>Ir a<br><br><br>\n      <ion-button [routerLink]=\"['/batalla']\" color=\"success\" fill=\"outline\">Batalla</ion-button>\n      &nbsp;\n      <ion-button [routerLink]=\"['/multijugador']\" color=\"tertiary\" fill=\"outline\">Vs. mode</ion-button>\n    </strong>\n  </div>\n</ion-content>\n";
 
 /***/ })
 
