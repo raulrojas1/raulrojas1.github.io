@@ -179,9 +179,6 @@ let MultiplayerRingPage = class MultiplayerRingPage {
     iniciarCiclo(tipo) {
         this.delay(2000).then(() => {
             this.voltearEnemigo(tipo);
-            this.delay(900).then(() => {
-                this.toggleOpciones(true);
-            });
         });
     }
     doRefresh(event) {
