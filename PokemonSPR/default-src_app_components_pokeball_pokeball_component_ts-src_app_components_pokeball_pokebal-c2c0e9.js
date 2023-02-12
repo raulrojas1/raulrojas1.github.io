@@ -11,7 +11,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "PokeballComponent": () => (/* binding */ PokeballComponent)
 /* harmony export */ });
-/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! tslib */ 4929);
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! tslib */ 4929);
 /* harmony import */ var _pokeball_component_html_ngResource__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./pokeball.component.html?ngResource */ 4227);
 /* harmony import */ var _pokeball_component_scss_ngResource__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./pokeball.component.scss?ngResource */ 5342);
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @angular/core */ 2560);
@@ -20,6 +20,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var src_app_services_sounds_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! src/app/services/sounds.service */ 5447);
 /* harmony import */ var src_app_game_ring_game_ring_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! src/app/game-ring/game-ring.service */ 6404);
 /* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! rxjs */ 2378);
+/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! rxjs */ 2425);
 
 
 
@@ -38,18 +39,30 @@ let PokeballComponent = class PokeballComponent {
         this.soundsService = soundsService;
         this.gameRingService = gameRingService;
         this.typeSelected$ = new rxjs__WEBPACK_IMPORTED_MODULE_6__.Observable();
+        this.pokemonReceived = this.gameRingService.pokemonShareInit;
         this.pokemonDatos = new _angular_core__WEBPACK_IMPORTED_MODULE_7__.EventEmitter(true);
         this.pokemonData = this.gameRingService.pokemonShareInit;
+        this.subscriptions = new rxjs__WEBPACK_IMPORTED_MODULE_8__.Subscription();
         this.delay = (ms) => new Promise((res) => setTimeout(res, ms));
     }
+    ngOnChanges(changes) {
+        console.log(this.pokemonReceived);
+        if (this.pokemonReceived.type !== '') {
+            this.pokemonData = this.pokemonReceived;
+            this.startPokeballCycle();
+        }
+    }
+    ngOnDestroy() {
+        this.subscriptions.unsubscribe();
+    }
     ngOnInit() {
-        this.gameRingService.getPokebals().subscribe({
+        this.subscriptions.add(this.gameRingService.getPokebals().subscribe({
             next: (hideOrder) => {
-                console.log('Hide ' + hideOrder);
+                console.log('Esconder');
                 this.voltear();
-            },
-        });
-        this.typeSelected$.subscribe({
+            }
+        }));
+        this.subscriptions.add(this.typeSelected$.subscribe({
             next: (typeIputed) => {
                 this.pokeType = typeIputed;
                 if (this.pokeType === 'random') {
@@ -59,24 +72,23 @@ let PokeballComponent = class PokeballComponent {
                     this.getPokemonByType(this.pokeType);
                 }
             },
-        });
-    }
-    ngOnChanges(changes) {
+        }));
     }
     emitirDatosPokemon() {
         this.pokemonDatos.emit(this.pokemonData);
     }
     getPokemonByType(type) {
-        this.pokemonService.getPokemonByTypee(type).subscribe({
+        this.subscriptions.add(this.pokemonService.getPokemonByTypee(type).subscribe({
             next: (res) => {
                 if (!this.resourcesOk(res)) {
                     this.getPokemonByType(this.pokeType);
                     return false;
                 }
+                console.log(res);
                 this.pokemonData = res;
                 this.startPokeballCycle();
             },
-        });
+        }));
     }
     startPokeballCycle() {
         this.slideNext();
@@ -112,10 +124,11 @@ PokeballComponent.ctorParameters = () => [
 ];
 PokeballComponent.propDecorators = {
     typeSelected$: [{ type: _angular_core__WEBPACK_IMPORTED_MODULE_7__.Input }],
+    pokemonReceived: [{ type: _angular_core__WEBPACK_IMPORTED_MODULE_7__.Input }],
     pokemonDatos: [{ type: _angular_core__WEBPACK_IMPORTED_MODULE_7__.Output }],
     swiper: [{ type: _angular_core__WEBPACK_IMPORTED_MODULE_7__.ViewChild, args: ['swipeBigPokeball', { static: false },] }]
 };
-PokeballComponent = (0,tslib__WEBPACK_IMPORTED_MODULE_8__.__decorate)([
+PokeballComponent = (0,tslib__WEBPACK_IMPORTED_MODULE_9__.__decorate)([
     (0,_angular_core__WEBPACK_IMPORTED_MODULE_7__.Component)({
         selector: 'app-pokeball',
         template: _pokeball_component_html_ngResource__WEBPACK_IMPORTED_MODULE_0__,
@@ -198,10 +211,9 @@ let GameRingService = class GameRingService {
         this.finCiclo = new rxjs__WEBPACK_IMPORTED_MODULE_1__.Subject();
         this.pokebalsState$ = new rxjs__WEBPACK_IMPORTED_MODULE_1__.Subject();
         this.typeSelected$ = new rxjs__WEBPACK_IMPORTED_MODULE_1__.Subject();
-        this.delay = (ms) => new Promise((res) => setTimeout(res, ms));
     }
     get ciclo() {
-        return this.finCiclo.pipe((0,rxjs_operators__WEBPACK_IMPORTED_MODULE_2__.filter)((x) => x === 2));
+        return this.finCiclo.pipe((0,rxjs_operators__WEBPACK_IMPORTED_MODULE_2__.filter)((x) => x === x));
     }
     getPokebals() {
         return this.pokebalsState$.asObservable();
@@ -273,7 +285,6 @@ let PokemonService = class PokemonService {
         this.http = http;
         this.pokemonShareTemplate = { name: '', image: '', sprite: '', type: '' };
         this.types = ['water', 'fire', 'grass'];
-        this.isShowed = false;
     }
     getRandomType() {
         return this.types[Math.floor(Math.random() * this.types.length)];

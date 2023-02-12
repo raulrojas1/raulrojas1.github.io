@@ -103,11 +103,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @angular/core */ 2560);
 /* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @angular/router */ 124);
 /* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! rxjs */ 2218);
-/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! rxjs/operators */ 3910);
+/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! rxjs */ 2425);
 /* harmony import */ var _services_sounds_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../services/sounds.service */ 5447);
 /* harmony import */ var _game_ring_game_ring_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../game-ring/game-ring.service */ 6404);
 /* harmony import */ var socket_io_client__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! socket.io-client */ 4769);
-
 
 
 
@@ -123,58 +122,40 @@ let MultiplayerRingPage = class MultiplayerRingPage {
         this.gameRingService = gameRingService;
         this.router = router;
         this.puntaje = 0;
-        this.tipoEnemigo$ = new rxjs__WEBPACK_IMPORTED_MODULE_5__.Subject();
         this.tipoSeleccionado$ = new rxjs__WEBPACK_IMPORTED_MODULE_5__.Subject();
         this.pokemonRival = this.gameRingService.pokemonShareInit;
         this.pokemonJugador = this.gameRingService.pokemonShareInit;
         this.enemyName = 'Enemigo';
+        this.subscriptions = new rxjs__WEBPACK_IMPORTED_MODULE_6__.Subscription();
         this.delay = (ms) => new Promise((res) => setTimeout(res, ms));
+    }
+    emitPokemon(pokemonRequested) {
+        this.pokemonJugador = pokemonRequested;
+        //only emmits when pokemon has values, sometimes is is just empty to reset values
+        if (pokemonRequested.type) {
+            this.socket.emit('playerSelects', this.pokemonJugador);
+        }
     }
     ngOnInit() {
         this.socket = (0,socket_io_client__WEBPACK_IMPORTED_MODULE_4__["default"])('https://pokemonsocket.onrender.com');
-        this.socket.on('enemySelects', type => {
-            this.iniciarCiclo(type);
+        this.socket.on('showEnemy', pokemonEnemy => {
+            this.iniciarCiclo(pokemonEnemy);
         });
-        this.socket.on('enemyDown', mensaje => {
-            // alert(mensaje);
+        this.socket.on('enemyDown', () => {
             this.reloadWindow();
         });
     }
     ngAfterViewInit() {
         this.soundsService.playMusicBackground('musica');
         this.soundsService.playPikachuSound();
-    }
-    ngOnDestroy() {
-        this.socket.disconnect();
-        this.soundsService.toggleMusic();
-    }
-    iniciarCiclo(tipo) {
-        // this.gameRingService.restartCount();
-        this.delay(2000).then(() => {
-            this.voltearEnemigo(tipo);
-            this.delay(900).then(() => {
-                this.toggleOpciones(true);
-            });
-        });
-    }
-    doRefresh(event) {
-        setTimeout(() => {
-            this.router.navigate(['multijugdor']);
-            event.target.complete();
-        }, 100);
-    }
-    tipoSelected(tipoClicado) {
-        this.toggleOpciones(false);
-        this.socket.emit('playerSelects', tipoClicado);
-        const comparadorHTML = document.querySelector('.comparador');
-        this.tipoSeleccionado$.next(tipoClicado);
-        this.tipoSeleccionado = tipoClicado;
         // espera a que las dos pokeballs sean traidas
         // toma un evento de las dos pokeballs
-        this.gameRingService.ciclo.pipe((0,rxjs_operators__WEBPACK_IMPORTED_MODULE_6__.take)(1)).subscribe({
+        this.subscriptions.add(this.gameRingService.ciclo.subscribe({
             next: (showedPokemons) => {
+                const comparadorHTML = document.querySelector('.comparador');
                 // valida que el contador de pokemons volteados sea 2
                 if (showedPokemons !== 2) {
+                    console.log('Llega');
                     return false;
                 }
                 this.delay(1000).then(() => {
@@ -186,11 +167,33 @@ let MultiplayerRingPage = class MultiplayerRingPage {
                         this.esperarParaIniciar();
                     });
                 });
-            },
+            }
+        }));
+    }
+    ngOnDestroy() {
+        this.socket.disconnect();
+        this.soundsService.toggleMusic();
+        this.subscriptions.unsubscribe();
+        this.gameRingService.restartCount();
+    }
+    iniciarCiclo(tipo) {
+        this.delay(2000).then(() => {
+            this.voltearEnemigo(tipo);
         });
     }
-    voltearEnemigo(tipo) {
-        this.tipoEnemigo$.next(tipo);
+    doRefresh(event) {
+        setTimeout(() => {
+            this.router.navigate(['multijugdor']);
+            event.target.complete();
+        }, 100);
+    }
+    tipoSelected(tipoClicado) {
+        this.toggleOpciones(false);
+        this.tipoSeleccionado$.next(tipoClicado);
+        this.tipoSeleccionado = tipoClicado;
+    }
+    voltearEnemigo(pokemonReceived) {
+        this.pokemonRival = pokemonReceived;
     }
     toggleOpciones(orden) {
         const lista = document.querySelector('#footerEleccion');
@@ -247,7 +250,7 @@ module.exports = ".pokeballsGroup {\n  text-align: center;\n  height: 10vh;\n}\n
   \************************************************************************/
 /***/ ((module) => {
 
-module.exports = "<ion-header>\n  <ion-toolbar>\n    <ion-buttons slot=\"start\">\n      <ion-back-button defaultHref=\"home\"></ion-back-button>\n    </ion-buttons>\n    <ion-title>Multiplayer</ion-title>\n    <ion-button\n      slot=\"end\"\n      fill=\"clear\"\n      (click)=\"toggleMusic()\"\n      style=\"font-size: 1.3em\"\n      >🔊</ion-button\n    >\n  </ion-toolbar>\n</ion-header>\n\n<ion-content scroll-y=\"false\" style=\"position: relative\">\n  <ion-refresher slot=\"fixed\" (ionRefresh)=\"doRefresh($event)\">\n    <ion-refresher-content></ion-refresher-content>\n  </ion-refresher>\n  <div id=\"contenidoArena\">\n    <div class=\"contenedorArena\">\n      <ion-card class=\"arena enemigoPokeball\">\n        <ion-card-header>\n          <ion-card-title *ngIf=\"pokemonRival\" class=\"ion-text-center titulos\"\n            >{{enemyName}} {{ pokemonRival.name}}\n          </ion-card-title>\n        </ion-card-header>\n        <ion-card-content class=\"pokeballTarjeta\">\n          <ion-grid>\n            <ion-row class=\"pokeballsGroup\">\n              <ion-col no-lines class=\"pokeballColumn\">\n                <br />\n                <app-pokeball\n                  [typeSelected$]=\"tipoEnemigo$\"\n                  (pokemonDatos)=\"pokemonRival = $event\"\n                ></app-pokeball>\n              </ion-col>\n            </ion-row>\n          </ion-grid>\n        </ion-card-content>\n      </ion-card>\n\n      <ion-card class=\"centroArena\">\n        <ion-card-header>\n          <ion-card-title class=\"ion-text-center titulos\"> </ion-card-title>\n        </ion-card-header>\n        <ion-card-content class=\"pokeballTarjeta\">\n          <ion-grid>\n            <ion-row style=\"display: none\"> </ion-row>\n            <ion-row class=\"pokeballsGroup\" style=\"display: none\">\n              <ion-col no-lines class=\"pokeballColumn\"> </ion-col>\n            </ion-row>\n            <ion-row class=\"pokeballsGroup\">\n              <ion-col class=\"pokeballColumn\">\n                <img\n                  *ngIf=\"pokemonJugador.sprite\"\n                  src=\"{{pokemonJugador.sprite}}\"\n                  alt=\"imagen\"\n                  class=\"spriteCentro\"\n                />\n              </ion-col>\n              <ion-col class=\"pokeballColumn\">\n                <ion-text class=\"comparador\"> VS </ion-text>\n              </ion-col>\n\n              <ion-col class=\"pokeballColumn\">\n                <img\n                  *ngIf=\"pokemonRival.sprite\"\n                  src=\"{{pokemonRival.sprite}}\"\n                  alt=\"imagen\"\n                  class=\"spriteCentro\"\n                />\n              </ion-col>\n            </ion-row>\n            <ion-row>\n              <ion-col>\n                <ion-text>\n                  <div>\n                    <h1 class=\"puntaje\">{{puntaje}}</h1>\n                  </div>\n                </ion-text>\n              </ion-col>\n            </ion-row>\n          </ion-grid>\n        </ion-card-content>\n      </ion-card>\n\n      <ion-card class=\"arena jugadorPokeball\">\n        <ion-card-header>\n          <ion-card-title *ngIf=\"pokemonJugador\" class=\"ion-text-center titulos\"\n            >Jugador {{ pokemonJugador.name }}\n          </ion-card-title>\n        </ion-card-header>\n        <ion-card-content class=\"pokeballTarjeta\">\n          <ion-grid>\n            <ion-row class=\"pokeballsGroup\">\n              <ion-col no-lines class=\"pokeballColumn\">\n                <br />\n                <app-pokeball\n                  [typeSelected$]=\"tipoSeleccionado$\"\n                  (pokemonDatos)=\"pokemonJugador = $event\"\n                ></app-pokeball>\n              </ion-col>\n            </ion-row>\n          </ion-grid>\n        </ion-card-content>\n      </ion-card>\n    </div>\n    <ion-footer id=\"footerEleccion\">\n      <ion-toolbar>\n        <ion-row class=\"pokeballsGroup\">\n          <ion-col>\n            <div\n              class=\"ion-activatable ripple-parent\"\n              (click)=\"tipoSelected('water')\"\n            >\n              <h3 class=\"tipoEmoji\">🌊</h3>\n              <ion-ripple-effect></ion-ripple-effect>\n            </div>\n          </ion-col>\n          <ion-col>\n            <div>\n              <div\n                class=\"ion-activatable ripple-parent\"\n                (click)=\"tipoSelected('fire')\"\n              >\n                <h3 class=\"tipoEmoji\">🔥</h3>\n                <ion-ripple-effect></ion-ripple-effect>\n              </div>\n            </div>\n          </ion-col>\n          <ion-col>\n            <div>\n              <div\n                class=\"ion-activatable ripple-parent\"\n                (click)=\"tipoSelected('grass')\"\n              >\n                <h3 class=\"tipoEmoji\">🌿</h3>\n                <ion-ripple-effect></ion-ripple-effect>\n              </div>\n            </div>\n          </ion-col>\n        </ion-row>\n      </ion-toolbar>\n    </ion-footer>\n  </div>\n</ion-content>\n";
+module.exports = "<ion-header>\n  <ion-toolbar>\n    <ion-buttons slot=\"start\">\n      <ion-back-button defaultHref=\"home\"></ion-back-button>\n    </ion-buttons>\n    <ion-title>Multiplayer</ion-title>\n    <ion-button\n      slot=\"end\"\n      fill=\"clear\"\n      (click)=\"toggleMusic()\"\n      style=\"font-size: 1.3em\"\n      >🔊</ion-button\n    >\n  </ion-toolbar>\n</ion-header>\n\n<ion-content scroll-y=\"false\" style=\"position: relative\">\n  <ion-refresher slot=\"fixed\" (ionRefresh)=\"doRefresh($event)\">\n    <ion-refresher-content></ion-refresher-content>\n  </ion-refresher>\n  <div id=\"contenidoArena\">\n    <div class=\"contenedorArena\">\n      <ion-card class=\"arena enemigoPokeball\">\n        <ion-card-header>\n          <ion-card-title *ngIf=\"pokemonRival\" class=\"ion-text-center titulos\"\n            >{{enemyName}} {{ pokemonRival.name}}\n          </ion-card-title>\n        </ion-card-header>\n        <ion-card-content class=\"pokeballTarjeta\">\n          <ion-grid>\n            <ion-row class=\"pokeballsGroup\">\n              <ion-col no-lines class=\"pokeballColumn\">\n                <br />\n                <app-pokeball\n                  [pokemonReceived]=\"pokemonRival\"\n                  (pokemonDatos)=\"pokemonRival = $event\"\n                ></app-pokeball>\n              </ion-col>\n            </ion-row>\n          </ion-grid>\n        </ion-card-content>\n      </ion-card>\n\n      <ion-card class=\"centroArena\">\n        <ion-card-header>\n          <ion-card-title class=\"ion-text-center titulos\"> </ion-card-title>\n        </ion-card-header>\n        <ion-card-content class=\"pokeballTarjeta\">\n          <ion-grid>\n            <ion-row style=\"display: none\"> </ion-row>\n            <ion-row class=\"pokeballsGroup\" style=\"display: none\">\n              <ion-col no-lines class=\"pokeballColumn\"> </ion-col>\n            </ion-row>\n            <ion-row class=\"pokeballsGroup\">\n              <ion-col class=\"pokeballColumn\">\n                <img\n                  *ngIf=\"pokemonJugador.sprite\"\n                  src=\"{{pokemonJugador.sprite}}\"\n                  alt=\"imagen\"\n                  class=\"spriteCentro\"\n                />\n              </ion-col>\n              <ion-col class=\"pokeballColumn\">\n                <ion-text class=\"comparador\"> VS </ion-text>\n              </ion-col>\n\n              <ion-col class=\"pokeballColumn\">\n                <img\n                  *ngIf=\"pokemonRival.sprite\"\n                  src=\"{{pokemonRival.sprite}}\"\n                  alt=\"imagen\"\n                  class=\"spriteCentro\"\n                />\n              </ion-col>\n            </ion-row>\n            <ion-row>\n              <ion-col>\n                <ion-text>\n                  <div>\n                    <h1 class=\"puntaje\">{{puntaje}}</h1>\n                  </div>\n                </ion-text>\n              </ion-col>\n            </ion-row>\n          </ion-grid>\n        </ion-card-content>\n      </ion-card>\n\n      <ion-card class=\"arena jugadorPokeball\">\n        <ion-card-header>\n          <ion-card-title *ngIf=\"pokemonJugador\" class=\"ion-text-center titulos\"\n            >Jugador {{ pokemonJugador.name }}\n          </ion-card-title>\n        </ion-card-header>\n        <ion-card-content class=\"pokeballTarjeta\">\n          <ion-grid>\n            <ion-row class=\"pokeballsGroup\">\n              <ion-col no-lines class=\"pokeballColumn\">\n                <br />\n                <app-pokeball\n                  [typeSelected$]=\"tipoSeleccionado$\"\n                  (pokemonDatos)=\"emitPokemon($event)\"\n                ></app-pokeball>\n              </ion-col>\n            </ion-row>\n          </ion-grid>\n        </ion-card-content>\n      </ion-card>\n    </div>\n    <ion-footer id=\"footerEleccion\">\n      <ion-toolbar>\n        <ion-row class=\"pokeballsGroup\">\n          <ion-col>\n            <div\n              class=\"ion-activatable ripple-parent\"\n              (click)=\"tipoSelected('water')\"\n            >\n              <h3 class=\"tipoEmoji\">🌊</h3>\n              <ion-ripple-effect></ion-ripple-effect>\n            </div>\n          </ion-col>\n          <ion-col>\n            <div>\n              <div\n                class=\"ion-activatable ripple-parent\"\n                (click)=\"tipoSelected('fire')\"\n              >\n                <h3 class=\"tipoEmoji\">🔥</h3>\n                <ion-ripple-effect></ion-ripple-effect>\n              </div>\n            </div>\n          </ion-col>\n          <ion-col>\n            <div>\n              <div\n                class=\"ion-activatable ripple-parent\"\n                (click)=\"tipoSelected('grass')\"\n              >\n                <h3 class=\"tipoEmoji\">🌿</h3>\n                <ion-ripple-effect></ion-ripple-effect>\n              </div>\n            </div>\n          </ion-col>\n        </ion-row>\n      </ion-toolbar>\n    </ion-footer>\n  </div>\n</ion-content>\n";
 
 /***/ }),
 
