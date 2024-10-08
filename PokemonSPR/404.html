@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="refresh" content="0; url=/PokemonSPR/index.html">
+    <script>
+        // Redirigir a la ruta correcta para que Angular/Ionic maneje la navegación.
+        const path = window.location.pathname.replace('/PokemonSPR', '');
+        if (path) {
+            window.location.replace('/PokemonSPR' + path);
+        } else {
+            window.location.replace('/PokemonSPR');
+        }
+    </script>
+</head>
+<body>
+</body>
+</html>
